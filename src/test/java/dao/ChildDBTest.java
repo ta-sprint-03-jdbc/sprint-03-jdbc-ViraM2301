@@ -57,20 +57,24 @@ class ChildDBTest {
     @Test
     @DisplayName("Should add a child with null birth date")
     void addShouldHandleNullBirthDate() throws SQLException {
-        // Arrange
-        // Act
-        // Assert
+        Child child = new Child("John", "Second", null);
+        Child addedChild = db.addChild(child);
 
+        assertNotNull(addedChild.id(), "Child ID should not be null");
+        assertNull(addedChild.birthDate(), "Birth date should be null");
     }
 
     @Test
     @DisplayName("Should update an existing child")
     void updateShouldUpdateExistingChild() throws SQLException {
-        // Arrange - Add a child first
-        // Create updated child
-        // Act
-        // Assert
-        // Verify the update by querying the database
+        Child child = new Child("John", "Doe", LocalDate.of(2010, 1, 1));
+        Child addedChild = db.addChild(child);
+
+        Child updateChild = new Child(addedChild.id(), "Anna", "Koli", LocalDate.of(2011, 2, 2));
+
+        boolean result = db.updateChild(updateChild);
+
+        assertTrue(result, "Update should return true");
 
     }
 
@@ -78,37 +82,40 @@ class ChildDBTest {
     @Test
     @DisplayName("Should delete an existing child")
     void deleteShouldDeleteExistingChild() throws SQLException {
-        // Arrange - Add a child first
-        // Act
-        // Assert
-        // Verify the deletion by querying the database
+        Child child = new Child("John", "Doe", LocalDate.of(2010, 1, 1));
+        Child addedChild = db.addChild(child);
+
+        boolean deleteResult = db.deleteChild(addedChild.id());
+
+        assertTrue(deleteResult, "Delete operation should return true");
     }
 
 
     @Test
     @DisplayName("Should return children with at least the specified age")
     void findChildrenWithMinimumAgeShouldReturnChildrenWithMinimumAge() throws SQLException {
-        // Arrange - Add children with different ages
-        // Child 1 - 10 years old
-        // Child 2 - 5 years old
-        // Child 3 - 15 years old
-        // Act - Get all children at least 10 years old
-        // Assert
-        // Verify that the result contains children with correct ages
-
+        Child child1 = new Child("Kate", "First", LocalDate.of(2016, 2, 2));
+        Child child2 = new Child("Stiv", "Second", LocalDate.of(2021, 3, 3));
+        Child child3 = new Child("John", "Doe", LocalDate.of(2011, 4, 4));
+        db.addChild(child1);
+        db.addChild(child2);
+        db.addChild(child3);
+        List<Child> children = db.findChildrenWithMinimumAge(10);
+        assertTrue(children.size() >= 2, "Should find at least 2 children");
+        assertTrue(children.stream().anyMatch(c -> "Kate".equals(c.firstName())));
+        assertTrue(children.stream().anyMatch(c -> "John".equals(c.firstName())));
     }
 
     @Test
     @DisplayName("Should return children with null birth date")
     void findChildrenWithoutBirthDateShouldReturnChildrenWithNullBirthDate() throws SQLException {
-        // Arrange - Add children with and without birth dates
-        // Child with birth date
+        Child child1 = new Child("Bob", "Thorn", LocalDate.of(2010, 2, 2));
+        Child child2 = new Child("Nik", "Dark", null);
+        db.addChild(child1);
+        db.addChild(child2);
 
-        // Child without birth date
-
-        // Act
-        // Assert
-        // Verify that the result contains the child without birth date
+        List<Child> children = db.findChildrenWithoutBirthDate();
+        assertTrue(children.stream().anyMatch(c -> "Nik".equals(c.firstName()) && c.birthDate() == null));
 
     }
 }

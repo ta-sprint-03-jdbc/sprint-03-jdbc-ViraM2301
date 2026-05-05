@@ -1,5 +1,6 @@
 package dao;
 
+import model.Category;
 import model.Child;
 import org.junit.jupiter.api.*;
 import utils.DBUtil;
@@ -118,5 +119,125 @@ class ChildDBTest {
         assertTrue(children.stream().anyMatch(c -> "Nik".equals(c.firstName()) && c.birthDate() == null));
 
     }
+
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when adding null child")
+    void addChildShouldThrowExceptionForNullChild() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.addChild(null));
+
+        assertEquals("Child cannot be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when adding child with null or empty first name")
+    void addChildShouldThrowExceptionForNullFirstName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.addChild(new Child(null, "Anna", LocalDate.of(2020, 2, 2))));
+
+        assertEquals("Child first name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when adding child with null or empty first name")
+    void addChildShouldThrowExceptionForEmptyFirstName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.addChild(new Child("", "Anna", LocalDate.of(2020, 2, 2))));
+
+        assertEquals("Child first name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when adding child with null or empty first name")
+    void addChildShouldThrowExceptionForTrimFirstName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.addChild(new Child("   ", "Anna", LocalDate.of(2020, 2, 2))));
+
+        assertEquals("Child first name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when adding child with null or empty last name")
+    void addChildShouldThrowExceptionForNullLastName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.addChild(new Child("Dao", null, LocalDate.of(2010, 2, 2))));
+
+        assertEquals("Child last name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when adding child with null or empty last name")
+    void addChildShouldThrowExceptionForEmptyLastName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.addChild(new Child("Dao", "", LocalDate.of(2010, 2, 2))));
+
+        assertEquals("Child last name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when update null child")
+    void updateChildShouldThrowExceptionForNullChild() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.updateChild(null));
+
+        assertEquals("Child cannot be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when update null child")
+    void updateChildShouldThrowExceptionForNullID() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.updateChild(new Child(null, "Dao", "David", LocalDate.of(2000, 4, 5))));
+
+        assertEquals("Child ID cannot be null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when update null child")
+    void updateChildShouldThrowExceptionForNullFirstName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.updateChild(new Child(1L, null, "David", LocalDate.of(2000, 4, 5))));
+
+        assertEquals("Child first name cannot be null or empty", exception.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when update null child")
+    void updateChildShouldThrowExceptionForEmptyFirstName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.updateChild(new Child(1L, "", "David", LocalDate.of(2000, 4, 5))));
+
+        assertEquals("Child first name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when update null child")
+    void updateChildShouldThrowExceptionForNullLastName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.updateChild(new Child(1L, "Scotty", null, LocalDate.of(2000, 4, 5))));
+
+        assertEquals("Child last name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when update null child")
+    void updateChildShouldThrowExceptionForEmptyLastName() {
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> db.updateChild(new Child(1L, "Scotty", "", LocalDate.of(2000, 4, 5))));
+
+        assertEquals("Child last name cannot be null or empty", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Should throw IllegalArgumentException when deleting category with null ID")
+    void deleteChildShouldThrowExceptionForNullId() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> db.deleteChild(null));
+
+        assertEquals("Child ID cannot be null", exception.getMessage());
+    }
+
+
 }
 
